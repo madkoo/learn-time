@@ -1,5 +1,5 @@
 import './styles.css';
-import { angleDelta, choices, clock, normalize, question, stages } from './time';
+import { angleDelta, choices, clock, feedback, normalize, question, stages } from './time';
 import { answerMessage, describeHands, preferredLanguage, translations, type Language, type TextKey } from './translations';
 
 type Mode = 'explore' | 'read' | 'set';
@@ -39,11 +39,24 @@ app.innerHTML = `
     </label>
   </header>
   <nav data-label="activities">
-    <button data-mode="explore" data-text="explore" aria-pressed="true"></button>
-    <button data-mode="read" data-text="read" aria-pressed="false"></button>
-    <button data-mode="set" data-text="set" aria-pressed="false"></button>
+    <button data-mode="explore" aria-pressed="true">
+      <svg class="activity-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+      <span data-text="explore"></span>
+    </button>
+    <button data-mode="read" aria-pressed="false">
+      <svg class="activity-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+      <span data-text="read"></span>
+    </button>
+    <button data-mode="set" aria-pressed="false">
+      <svg class="activity-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l-3 3M17 4l3 3"/></svg>
+      <span data-text="set"></span>
+    </button>
   </nav>
   <section class="workbench" aria-labelledby="task">
+    <div class="task-intro">
+      <h2 id="task">Make the hands move.</h2>
+      <p id="instruction">Watch how the short hand moves as the minutes go by.</p>
+    </div>
     <div class="clock-area">
       <div id="clock-surface">
       <svg id="clock" viewBox="0 0 320 320" role="img" aria-label="Teaching clock">
@@ -61,12 +74,10 @@ app.innerHTML = `
       <div class="hub-mask" aria-hidden="true"></div>
       </div>
       <div id="burst" aria-hidden="true" hidden>★ ✦ ★ ✦ ★</div>
-      <div class="key"><span><b class="hour-key"></b><span data-text="hourKey"></span></span><span><b class="minute-key"></b><span data-text="minuteKey"></span></span></div>
+      <div class="key"><span id="hour-key"><b class="hour-key"></b><span data-text="hourKey"></span></span><span id="minute-key"><b class="minute-key"></b><span data-text="minuteKey"></span></span></div>
       <p id="drag-tip" data-text="dragTip"></p>
     </div>
     <div class="practice">
-      <h2 id="task">Make the hands move.</h2>
-      <p id="instruction">Watch how the short hand moves as the minutes go by.</p>
       <div id="readout" class="readout" aria-label="Current time">7:30</div>
       <div id="controls">
         <fieldset><legend data-text="hour"></legend>
@@ -146,6 +157,12 @@ function draw() {
   element('#success-time', HTMLElement).textContent = clock(target).digital;
   hourHand.classList.toggle('active-hand', drag?.hand === 'hour');
   minuteHand.classList.toggle('active-hand', drag?.hand === 'minute');
+  const hint = outcome === 'incorrect' && hints.checked && lastAnswer !== undefined
+    ? feedback(lastAnswer, target) : undefined;
+  hourHand.classList.toggle('hint-hand', hint === 'hourHint');
+  minuteHand.classList.toggle('hint-hand', hint === 'minuteHint');
+  element('#hour-key', HTMLElement).classList.toggle('hint-key', hint === 'hourHint');
+  element('#minute-key', HTMLElement).classList.toggle('hint-key', hint === 'minuteHint');
   options.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
     const correct = outcome === 'correct' && Number(button.dataset.answer) === target;
     button.classList.toggle('correct-choice', correct);
@@ -288,7 +305,10 @@ reveal.addEventListener('click', () => {
   draw();
   next.focus();
 });
-hints.addEventListener('change', renderStatus);
+hints.addEventListener('change', () => {
+  renderStatus();
+  draw();
+});
 element('#language', HTMLSelectElement).addEventListener('change', event => {
   if (!(event.currentTarget instanceof HTMLSelectElement)) return;
   cancelDrag();

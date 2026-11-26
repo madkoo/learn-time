@@ -34,6 +34,18 @@ npm run check
 
 If your environment proxies local traffic, set `NO_PROXY=127.0.0.1,localhost` (and `no_proxy` where needed) for browser tests. The sandbox must allow listening on `127.0.0.1:5173` and launching browsers.
 
+## GitHub Pages
+
+In the repository's **Settings → Pages**, select **GitHub Actions** as the
+deployment source. The Pages workflow builds and tests the app before deploying
+`dist/` on pushes to `main`; it can also be started from the Actions tab. If
+the default branch has a different name, update the workflow's branch filter.
+The deployment URL appears in the workflow's `github-pages` environment.
+
+Vite's relative base supports both a root site and a repository subpath. After
+deployment, open and refresh the published URL and try all three activities.
+GitHub Pages requires JavaScript enabled; no server or API is needed.
+
 ## Interaction and privacy
 
 Use the labeled hour/minute buttons with a pointer or keyboard, or drag the
@@ -51,8 +63,9 @@ Correct Read/Set answers show a lasting success card and matching numeric time;
 Read also marks the correct choice with a checkmark. A decorative local star
 burst lasts 0.9 seconds and is omitted under reduced motion. Repeated checks or
 language changes do not reward again. "Next clock" becomes the primary action;
-there is no automatic advance. Incorrect answers remain retryable, with optional
-hints. "Show me" gives an instructional answer without a success reward. A
+there is no automatic advance. Incorrect answers remain retryable, with optional hints that highlight the
+relevant hand and its label. "Show me" gives an instructional answer without a
+success reward. A
 committed edit or a new activity/question clears feedback.
 
 Choose **Language / Keel → English / Eesti**. The first preferred browser locale

@@ -85,6 +85,37 @@ test('reveal, hints off and mode changes do not leak old answers', async ({ page
   await expect(page.locator('#readout')).toBeHidden();
 });
 
+test('visual hints identify the relevant hand and respect the hint setting', async ({ page }) => {
+  await page.getByRole('button', { name: 'Set the clock', exact: true }).click();
+  await page.getByRole('button', { name: 'Check my clock' }).click();
+  await expect(page.locator('#hour-hand')).toHaveClass(/hint-hand/);
+  await expect(page.locator('#hour-key')).toHaveClass(/hint-key/);
+  await expect(page.locator('#minute-hand')).not.toHaveClass(/hint-hand/);
+
+  await selectStage(page, 0);
+  await page.getByLabel('Give hints after a try').uncheck();
+  await expect(page.locator('.hint-hand, .hint-key')).toHaveCount(0);
+  await page.getByLabel('Give hints after a try').check();
+  await expect(page.locator('#hour-hand')).toHaveClass(/hint-hand/);
+
+  await page.getByRole('button', { name: 'Forward 30 minutes' }).click();
+  await expect(page.locator('.hint-hand, .hint-key')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Check my clock' }).click();
+  await expect(page.locator('#minute-hand')).toHaveClass(/hint-hand/);
+  await expect(page.locator('#minute-key')).toHaveClass(/hint-key/);
+  await page.getByRole('button', { name: 'Show me' }).click();
+  await expect(page.locator('.hint-hand, .hint-key')).toHaveCount(0);
+
+  await page.getByRole('button', { name: 'Read the clock', exact: true }).click();
+  const target = await readTarget(page);
+  await page.locator(`#choices button[data-answer="${(target + 60) % 720}"]`).click();
+  await expect(page.locator('#hour-hand')).toHaveClass(/hint-hand/);
+  await expect(page.locator('#readout')).toBeHidden();
+  await expect(page.getByRole('img')).not.toHaveAttribute('aria-label', /Clock showing/);
+  await page.getByRole('button', { name: 'Next clock' }).click();
+  await expect(page.locator('.hint-hand, .hint-key')).toHaveCount(0);
+});
+
 test('clock supports pointer dragging across 12 and Escape cancellation', async ({ page }) => {
   await selectStage(page, 2);
   for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Forward 5 minutes', exact: true }).click();
