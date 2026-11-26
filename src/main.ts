@@ -116,6 +116,8 @@ const svg = element('#clock', SVGSVGElement);
 const clockSurface = element('#clock-surface', HTMLElement);
 const hourTarget = element('#hour-target', HTMLElement);
 const minuteTarget = element('#minute-target', HTMLElement);
+const hourHit = element('#hour-target .hit', HTMLElement);
+const minuteHit = element('#minute-target .hit', HTMLElement);
 const hourHand = element('#hour-hand', SVGGElement);
 const minuteHand = element('#minute-hand', SVGGElement);
 const status = element('#status', HTMLElement);
@@ -136,8 +138,8 @@ function draw() {
   const c = clock(shown);
   hourHand.setAttribute('transform', `rotate(${c.hourDegrees} 160 160)`);
   minuteHand.setAttribute('transform', `rotate(${c.minuteDegrees} 160 160)`);
-  hourTarget.style.transform = `rotate(${c.hourDegrees}deg)`;
-  minuteTarget.style.transform = `rotate(${c.minuteDegrees}deg)`;
+  hourHit.style.transform = `rotate(${c.hourDegrees}deg)`;
+  minuteHit.style.transform = `rotate(${c.minuteDegrees}deg)`;
   svg.setAttribute('aria-label', mode === 'explore' || solved
     ? t.clockShowing(c.digital, describeHands(shown, language))
     : describeHands(shown, language));

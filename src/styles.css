@@ -46,6 +46,9 @@ svg text { font-size: 25px; font-weight: 700; text-anchor: middle; dominant-base
 .hit { position: absolute; left: calc(50% - 26px); width: 52px; pointer-events: none; }
 #hour-target .hit { top: 29.375%; height: 23.75%; }
 #minute-target .hit { top: 15.3125%; height: 40.3125%; }
+/* Keep the small targets rotating about the clock center, not their full overlay. */
+#hour-target .hit { transform-origin: 50% 86.8421%; }
+#minute-target .hit { transform-origin: 50% 86.0465%; }
 .draggable .hit { pointer-events: auto; cursor: grab; touch-action: none; }
 .hub-mask { position: absolute; left: 43.75%; top: 43.75%; width: 12.5%; height: 12.5%; clip-path: circle(50%); }
 .grab-cue { fill: white; stroke: var(--ink); stroke-width: 2; pointer-events: none; }
