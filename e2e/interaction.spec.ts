@@ -380,7 +380,15 @@ test('Estonian narrow and enlarged layout keeps hand targets and keyboard altern
     await page.evaluate(s => { document.documentElement.style.fontSize = s; }, size);
     for (const mode of ['explore', 'read', 'set']) {
       await page.locator(`[data-mode="${mode}"]`).click();
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      const layout = await page.evaluate(() => ({
+        viewport: innerWidth,
+        document: document.documentElement.scrollWidth,
+        overflowing: Array.from(document.querySelectorAll('body *'))
+          .filter(element => element.getBoundingClientRect().right > innerWidth)
+          .slice(0, 5)
+          .map(element => `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}`),
+      }));
+      expect(layout.document, `${mode} at ${size}: ${JSON.stringify(layout)}`).toBeLessThanOrEqual(layout.viewport);
     }
   }
   for (const hand of await page.locator('.hit').all()) {

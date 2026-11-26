@@ -90,17 +90,18 @@ fieldset button { flex: 1; }
 footer { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 20px 8px 0; }
 .preference { display: flex; align-items: center; gap: 10px; min-height: 48px; cursor: pointer; }
 input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--ink); flex-shrink: 0; }
-details { max-width: min(360px, 100%); }
+details { min-width: 0; max-width: min(360px, 100%); }
 summary { padding: 12px 0; font-weight: 700; }
 details label[for="stage"] { display: block; margin: 12px 0 8px; }
-select { width: 100%; background: #fff; border: 2px solid #7586a0; border-radius: 8px; padding: 8px; }
+select { min-width: 0; max-width: 100%; width: 100%; background: #fff; border: 2px solid #7586a0; border-radius: 8px; padding: 8px; }
 details p { font-size: .9rem; line-height: 1.5; }
 [hidden] { display: none !important; }
 @media (max-width: 680px) {
   #app { padding: 16px 12px 24px; }
   header { gap: 4px 10px; }
   header p { flex-basis: 100%; }
-  .language { margin-left: 0; }
+  .language { margin-left: 0; width: 100%; }
+  details { width: 100%; }
   nav { gap: 6px; }
   nav button { padding: 8px 4px; flex: 1; flex-direction: column; gap: 4px; }
   .workbench { grid-template-columns: 1fr; grid-template-areas: "task" "clock" "practice"; padding: 20px 16px; gap: 16px; border-radius: 24px 24px 10px 10px; }
