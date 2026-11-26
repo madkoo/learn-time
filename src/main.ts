@@ -204,7 +204,7 @@ function localize() {
   });
   document.querySelectorAll<HTMLElement>('[data-label]').forEach(node => {
     const label = t[node.dataset.label as TextKey];
-    node.setAttribute('aria-label', node.dataset.text ? `${label} (${t[node.dataset.text as TextKey]})` : label);
+    node.setAttribute('aria-label', node.dataset.text ? `${t[node.dataset.text as TextKey]} (${label})` : label);
   });
   element('#language', HTMLSelectElement).value = language;
   element('#stage', HTMLSelectElement).querySelectorAll('option').forEach((option, i) => {
@@ -217,8 +217,8 @@ function localize() {
   stepForward.dataset.step = String(step);
   stepBack.textContent = t.minuteButton(step, false);
   stepForward.textContent = t.minuteButton(step, true);
-  stepBack.setAttribute('aria-label', `${t.minuteStep(step, false)} (${stepBack.textContent})`);
-  stepForward.setAttribute('aria-label', `${t.minuteStep(step, true)} (${stepForward.textContent})`);
+  stepBack.setAttribute('aria-label', `${stepBack.textContent} (${t.minuteStep(step, false)})`);
+  stepForward.setAttribute('aria-label', `${stepForward.textContent} (${t.minuteStep(step, true)})`);
   renderStatus();
   draw();
 }

@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
 
 test('Explore keeps displays synchronized at transitions and rollovers', async ({ page }) => {
   await selectStage(page, 2);
-  const forward = page.getByRole('button', { name: /^Forward 5 minutes/ });
+  const forward = page.getByRole('button', { name: /Forward 5 minutes/ });
   for (let i = 0; i < 5; i++) await forward.click();
   await expect(page.locator('#readout')).toHaveText('7:55');
   await expect(page.locator('#hour-hand')).toHaveAttribute('transform', 'rotate(237.5 160 160)');
@@ -30,14 +30,14 @@ test('Explore keeps displays synchronized at transitions and rollovers', async (
   await page.getByLabel('Practise these times').selectOption('3');
   for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Forward one hour' }).click();
   await expect(page.locator('#readout')).toHaveText('12:00');
-  await page.getByRole('button', { name: /^Back 1 minute / }).click();
+  await page.getByRole('button', { name: /Back 1 minute/ }).click();
   await expect(page.locator('#readout')).toHaveText('11:59');
-  await page.getByRole('button', { name: /^Forward 1 minute / }).click();
+  await page.getByRole('button', { name: /Forward 1 minute/ }).click();
   await expect(page.locator('#readout')).toHaveText('12:00');
-  await page.getByRole('button', { name: /^Back 1 minute / }).click();
+  await page.getByRole('button', { name: /Back 1 minute/ }).click();
   await page.getByRole('button', { name: 'Forward one hour' }).click();
   await expect(page.locator('#readout')).toHaveText('12:59');
-  await page.getByRole('button', { name: /^Forward 1 minute / }).click();
+  await page.getByRole('button', { name: /Forward 1 minute/ }).click();
   await expect(page.locator('#readout')).toHaveText('1:00');
 });
 
@@ -119,7 +119,7 @@ test('visual hints identify the relevant hand and respect the hint setting', asy
 
 test('clock supports pointer dragging across 12 and Escape cancellation', async ({ page }) => {
   await selectStage(page, 2);
-  for (let i = 0; i < 4; i++) await page.getByRole('button', { name: /^Forward 5 minutes/ }).click();
+  for (let i = 0; i < 4; i++) await page.getByRole('button', { name: /Forward 5 minutes/ }).click();
   await page.locator('#clock').scrollIntoViewIfNeeded();
   const box = await page.locator('#clock').boundingBox();
   if (!box) throw new Error('Clock has no bounds');
@@ -163,7 +163,9 @@ test('accessible states, reduced motion, narrow reflow and no third-party reques
     for (const mode of ['Explore', 'Read the clock', 'Set the clock']) {
       await page.getByRole('button', { name: mode, exact: true }).click();
       const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+        .setLegacyMode()
+        .analyze();
       expect(results.violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     }

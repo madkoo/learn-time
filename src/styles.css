@@ -54,8 +54,8 @@ svg text { font-size: 25px; font-weight: 700; text-anchor: middle; dominant-base
 .hint-hand .hour, .hint-hand .minute { filter: drop-shadow(0 0 4px var(--ink)); stroke: white; stroke-width: 4; paint-order: stroke fill; }
 .hint-hand .minute { stroke: var(--minute); stroke-width: 13; }
 .active-target .hit { cursor: grabbing; }
-.language { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: .9rem; }
-.language select { width: auto; }
+.language { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; font-size: .9rem; min-width: 0; }
+.language select { width: auto; max-width: 100%; }
 .success-card { border: 3px solid var(--ink); background: #fff; border-radius: 14px; padding: 16px; margin: 16px 0; font-size: 1.4rem; }
 #success-time { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .choices .correct-choice { border: 4px solid var(--ink); background: #d5f2e3; }
