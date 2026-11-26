@@ -80,7 +80,7 @@ h2 { font-size: 1.65rem; margin: 0 0 8px; letter-spacing: -.025em; }
 #instruction { line-height: 1.5; margin: 0 0 16px; max-width: 35ch; }
 .readout { font-size: clamp(2rem, 15vw, 3.4rem); font-weight: 700; font-variant-numeric: tabular-nums; margin: 12px 0 20px; }
 .practice { grid-area: practice; min-width: 0; }
-fieldset { margin: 0 0 16px; border: 0; padding: 0; display: flex; gap: 10px; }
+fieldset { margin: 0 0 16px; border: 0; padding: 0; display: flex; gap: 10px; min-width: 0; flex-wrap: wrap; }
 legend { margin-bottom: 8px; font-weight: 700; }
 fieldset button { flex: 1; }
 .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); gap: 12px; margin: 20px 0; }

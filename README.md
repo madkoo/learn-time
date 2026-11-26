@@ -30,7 +30,7 @@ npx playwright install chromium firefox webkit
 npm run check
 ```
 
-`npm run build` type-checks and creates the static site in `dist/`. `npm test` runs model tests. `npm run test:e2e` runs Playwright in Chromium, Firefox, WebKit, and mobile WebKit emulation. The browser tests start their own local server.
+`npm run build` type-checks and creates the static site in `dist/`. `npm test` runs model tests. `npm run test:e2e` runs Playwright in Chromium, Firefox, WebKit, and mobile WebKit emulation. The browser tests start their own local server and run one worker at a time in CI to limit browser memory use.
 
 If your environment proxies local traffic, set `NO_PROXY=127.0.0.1,localhost` (and `no_proxy` where needed) for browser tests. The sandbox must allow listening on `127.0.0.1:5173` and launching browsers.
 
@@ -95,11 +95,10 @@ for both hands, cancellation restoring time, and horizontal reflow at 320 and
 1024 CSS pixels. Correct Set feedback and switching its completed state to
 Estonian also passed a browser smoke check.
 
-Browser tests are type-checked but **not executed successfully**: the initial
-attempt failed with a local-proxy Host mismatch; the documented `NO_PROXY` retry
-was blocked by sandbox policy (`listen EPERM` on `127.0.0.1:5173`). Review the
-sandbox policy before running the browser suite; these smoke checks are not a
-full browser-suite pass.
+Browser tests are type-checked but **not verified after the workflow fixes**:
+the local proxy caused a Host mismatch, and the `NO_PROXY` retry was blocked by
+sandbox policy (`listen EPERM` on `127.0.0.1:5173`). Permit local listening in
+the sandbox or run the workflow to verify the browser suite.
 
 Automated accessibility checks are not a WCAG certification. Before release, run the browser suite and manually check VoiceOver/TalkBack (including Estonian pronunciation and single success announcements), keyboard navigation, 200% text size, 400% zoom, both orientations, and dragging/scrolling on Safari/iOS and Chrome/Android real touch devices. Have an Estonian-speaking reviewer approve the wording. Test the prototype with children and guardians, including children with access needs. Educational effectiveness has not been measured.
 

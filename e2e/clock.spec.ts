@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
 
 test('Explore keeps displays synchronized at transitions and rollovers', async ({ page }) => {
   await selectStage(page, 2);
-  const forward = page.getByRole('button', { name: 'Forward 5 minutes', exact: true });
+  const forward = page.getByRole('button', { name: /^Forward 5 minutes/ });
   for (let i = 0; i < 5; i++) await forward.click();
   await expect(page.locator('#readout')).toHaveText('7:55');
   await expect(page.locator('#hour-hand')).toHaveAttribute('transform', 'rotate(237.5 160 160)');
@@ -30,14 +30,14 @@ test('Explore keeps displays synchronized at transitions and rollovers', async (
   await page.getByLabel('Practise these times').selectOption('3');
   for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Forward one hour' }).click();
   await expect(page.locator('#readout')).toHaveText('12:00');
-  await page.getByRole('button', { name: 'Back 1 minute', exact: true }).click();
+  await page.getByRole('button', { name: /^Back 1 minute / }).click();
   await expect(page.locator('#readout')).toHaveText('11:59');
-  await page.getByRole('button', { name: 'Forward 1 minute', exact: true }).click();
+  await page.getByRole('button', { name: /^Forward 1 minute / }).click();
   await expect(page.locator('#readout')).toHaveText('12:00');
-  await page.getByRole('button', { name: 'Back 1 minute', exact: true }).click();
+  await page.getByRole('button', { name: /^Back 1 minute / }).click();
   await page.getByRole('button', { name: 'Forward one hour' }).click();
   await expect(page.locator('#readout')).toHaveText('12:59');
-  await page.getByRole('button', { name: 'Forward 1 minute', exact: true }).click();
+  await page.getByRole('button', { name: /^Forward 1 minute / }).click();
   await expect(page.locator('#readout')).toHaveText('1:00');
 });
 
@@ -86,13 +86,13 @@ test('reveal, hints off and mode changes do not leak old answers', async ({ page
 });
 
 test('visual hints identify the relevant hand and respect the hint setting', async ({ page }) => {
+  await selectStage(page, 0);
   await page.getByRole('button', { name: 'Set the clock', exact: true }).click();
   await page.getByRole('button', { name: 'Check my clock' }).click();
   await expect(page.locator('#hour-hand')).toHaveClass(/hint-hand/);
   await expect(page.locator('#hour-key')).toHaveClass(/hint-key/);
   await expect(page.locator('#minute-hand')).not.toHaveClass(/hint-hand/);
 
-  await selectStage(page, 0);
   await page.getByLabel('Give hints after a try').uncheck();
   await expect(page.locator('.hint-hand, .hint-key')).toHaveCount(0);
   await page.getByLabel('Give hints after a try').check();
@@ -100,6 +100,7 @@ test('visual hints identify the relevant hand and respect the hint setting', asy
 
   await page.getByRole('button', { name: 'Forward 30 minutes' }).click();
   await expect(page.locator('.hint-hand, .hint-key')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Back one hour' }).click();
   await page.getByRole('button', { name: 'Check my clock' }).click();
   await expect(page.locator('#minute-hand')).toHaveClass(/hint-hand/);
   await expect(page.locator('#minute-key')).toHaveClass(/hint-key/);
@@ -118,7 +119,7 @@ test('visual hints identify the relevant hand and respect the hint setting', asy
 
 test('clock supports pointer dragging across 12 and Escape cancellation', async ({ page }) => {
   await selectStage(page, 2);
-  for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Forward 5 minutes', exact: true }).click();
+  for (let i = 0; i < 4; i++) await page.getByRole('button', { name: /^Forward 5 minutes/ }).click();
   await page.locator('#clock').scrollIntoViewIfNeeded();
   const box = await page.locator('#clock').boundingBox();
   if (!box) throw new Error('Clock has no bounds');
