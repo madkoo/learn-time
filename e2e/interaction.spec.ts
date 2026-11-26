@@ -376,17 +376,17 @@ test('Estonian narrow and enlarged layout keeps hand targets and keyboard altern
   await page.setViewportSize({ width: 320, height: 568 });
   await page.locator('#language').selectOption('et');
   await page.locator('summary').click();
-  for (const size of ['100%', '200%']) {
+  for (const size of ['100%', '200%', '250%']) {
     await page.evaluate(s => { document.documentElement.style.fontSize = s; }, size);
     for (const mode of ['explore', 'read', 'set']) {
       await page.locator(`[data-mode="${mode}"]`).click();
       const layout = await page.evaluate(() => ({
         viewport: innerWidth,
         document: document.documentElement.scrollWidth,
-        overflowing: Array.from(document.querySelectorAll('body *'))
-          .filter(element => element.getBoundingClientRect().right > innerWidth)
+        overflowing: Array.from(document.querySelectorAll<HTMLElement>('body *'))
+          .filter(element => element.getBoundingClientRect().right > innerWidth || element.scrollWidth > element.clientWidth)
           .slice(0, 5)
-          .map(element => `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}`),
+          .map(element => `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''} (${element.clientWidth}/${element.scrollWidth})`),
       }));
       expect(layout.document, `${mode} at ${size}: ${JSON.stringify(layout)}`).toBeLessThanOrEqual(layout.viewport);
     }

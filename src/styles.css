@@ -94,7 +94,7 @@ footer { display: flex; align-items: flex-start; justify-content: space-between;
 .preference { display: flex; align-items: center; gap: 10px; min-height: 48px; cursor: pointer; }
 input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--ink); flex-shrink: 0; }
 details { min-width: 0; max-width: min(360px, 100%); }
-summary { padding: 12px 0; font-weight: 700; }
+summary { padding: 12px 0; font-weight: 700; overflow-wrap: anywhere; }
 details label[for="stage"] { display: block; margin: 12px 0 8px; }
 select { min-width: 0; max-width: 100%; width: 100%; background: #fff; border: 2px solid #7586a0; border-radius: 8px; padding: 8px; }
 details p { font-size: .9rem; line-height: 1.5; }
